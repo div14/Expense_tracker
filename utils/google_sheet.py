@@ -1,3 +1,5 @@
+import os
+import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
@@ -15,10 +17,21 @@ SCOPES = [
 # -----------------------------------
 def get_sheet():
 
-    credentials = Credentials.from_service_account_file(
-        "creds/service_account.json",
-        scopes=SCOPES
-    )
+    # Local Development
+    if os.path.exists("creds/service_account.json"):
+
+        credentials = Credentials.from_service_account_file(
+            "creds/service_account.json",
+            scopes=SCOPES
+        )
+
+    # Streamlit Cloud
+    else:
+
+        credentials = Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
+            scopes=SCOPES
+        )
 
     client = gspread.authorize(credentials)
 
