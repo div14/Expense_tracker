@@ -3,6 +3,7 @@ import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 from datetime import datetime
+import pytz
 
 # -----------------------------------
 # Google API Scopes
@@ -43,12 +44,17 @@ def get_sheet():
 # -----------------------------------
 # Add Expense
 # -----------------------------------
+# Indian Time Zone
+IST = pytz.timezone("Asia/Kolkata")
+
 def add_expense(amount, description):
 
     sheet = get_sheet()
 
-    today = datetime.now().strftime("%d-%m-%Y")
-    current_time = datetime.now().strftime("%I:%M %p")
+    now = datetime.now(IST)
+
+    today = now.strftime("%d-%m-%Y")
+    current_time = now.strftime("%I:%M %p")
 
     sheet.append_row([
         today,
